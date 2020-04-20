@@ -19,13 +19,7 @@ panthers = balance_experience(0, 3)
 bandits = balance_experience(3, 6)
 warriors = balance_experience(6, 9)
 
-
-# Better way?
-team_dict = {}
-team_dict["Panthers"] = panthers
-team_dict["Bandits"] = bandits
-team_dict["Warriors"] = warriors
-
+team_dict = {"Panthers": panthers, "Bandits": bandits, "Warriors": warriors}
 
 all_data = []
 for team, name in team_dict.items():
@@ -33,10 +27,6 @@ for team, name in team_dict.items():
         if player['name'] in name:
             player['team'] = team
             all_data.append(player)
-
-# or longwinded list comprehension of dictionaries?
-# all_data = [[(team, name) for team, name in team_dict.items()] for player in PLAYERS player['team'] = team if player['name'] in name]
-
 
 
 def stats_message(team):
@@ -74,21 +64,19 @@ def more_stats(*args):
     while True:
         try:
             args = input('\nWould you like to view more stats? [y]es/[n]o: ')
-            if args.upper() != 'Y' and args.upper() != 'N':
+            if args.upper() not in ['Y', 'YES'] and args.upper() not in ['N', 'NO']:
                 raise ValueError
-            if args.upper() == 'Y':
+            if args.upper() in ['Y', 'YES']:
                 return args
-            elif args.upper() == 'N':
-                args = input('Would you like to return to the main menu? [y]es/[n]o: ')
+            elif args.upper() in ['N', 'NO']:
                 return args
         except ValueError:
-            print('Please enter y or n.')
+            print('Oops... Please enter y or n.')
 
 
 def main_menu():
     print("  \nBASKETBALL STATS TOOL\n")
     print("----MENU----\n")
-
     choice = get_users_choice()
     if choice == 1:
         print("\n")
@@ -161,4 +149,3 @@ Enter an option > """))
             return choice
         except ValueError:
             print("Please enter a valid choice.\n")
-# show whole team each individual dict obj displayed nicely
