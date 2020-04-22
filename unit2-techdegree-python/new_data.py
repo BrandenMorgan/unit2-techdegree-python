@@ -60,7 +60,7 @@ def experience_message(num_of_experienced_players, experiened_players, num_of_in
     '\nInexperienced players: {}\n {}\n'.format(num_of_inexperienced_players, inexperienced_players))
 
 
-def more_stats(*args):
+def keep_viewing(*args):
     while True:
         try:
             args = input('\nWould you like to view more stats? [y]es/[n]o: ')

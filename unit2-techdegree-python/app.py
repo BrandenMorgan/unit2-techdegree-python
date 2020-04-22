@@ -11,10 +11,10 @@ def team_stats(team):
     average_height = new_data.get_average_height(height_list)
     experienced_players = new_data.get_player_experience(team, 'YES')
     inexperienced = new_data.get_player_experience(team, 'NO')
-    
+
     new_data.stats_message(team)
     new_data.total_players_message(len(player_list),  "- " + (', ').join(player_list))
-    view_more_stats = new_data.more_stats()
+    keep_viewing = new_data.keep_viewing()
 
 
     def view_all_stats_message(team):
@@ -23,34 +23,38 @@ def team_stats(team):
         new_data.height_message( "- " + (', ').join(height_list), average_height)
         new_data.experience_message(len(experienced_players), "- " + (', ').join(experienced_players),
                             len(inexperienced),  "- " + (', ').join(experienced_players))
-        view_more_stats = new_data.more_stats()
-        return view_more_stats
-
-
-    if view_more_stats.upper() in ['Y', 'YES']:
+        keep_viewing = new_data.keep_viewing()
+        return keep_viewing
+    # Checks if the user wants to continue viewing stats
+    if keep_viewing.upper() in ['Y', 'YES']:
         stats = new_data.view_stats()
+        # Print Team Guardians
         if stats == 1:
             new_data.guardian_message(guardians.replace(' and', ','))
-            view_more_stats = new_data.more_stats(view_more_stats)
-            if view_more_stats.upper() in ['N', 'NO']:
-                return view_more_stats
+            keep_viewing = new_data.keep_viewing()
+            if keep_viewing.upper() in ['N', 'NO']:
+                return keep_viewing
+        # Print Team Heights
         elif stats == 2:
             new_data.height_message("- " + (', ').join(height_list), average_height)
-            view_more_stats = new_data.more_stats(view_more_stats)
-            if view_more_stats.upper() == 'N':
-                return view_more_stats
+            keep_viewing = new_data.keep_viewing()
+            if keep_viewing.upper() in ['N', 'NO']:
+                return keep_viewing
+        # Print Players Via Experience
         elif stats == 3:
             new_data.experience_message(len(experienced_players), "- " + (', ').join(experienced_players),
-                                len(inexperienced),  "- " + (', ').join(experienced_players))
-            view_more_stats = new_data.more_stats(view_more_stats)
-            if view_more_stats.upper() == 'N':
-                return view_more_stats
+                                        len(inexperienced), "- " + (', ').join(experienced_players))
+            keep_viewing = new_data.keep_viewing()
+            if keep_viewing.upper() in ['N', 'NO']:
+                return keep_viewing
+        # Print all stats
         elif stats == 4:
-            view_more_stats = view_all_stats_message(team)
-    if view_more_stats.upper() in ['N', 'NO']:
+            keep_viewing = view_all_stats_message(team)
+
+    if keep_viewing.upper() in ['N', 'NO']:
         new_data.goodbye_message()
         sys.exit()
-    return view_more_stats
+    return keep_viewing
 
 
 def start_program():

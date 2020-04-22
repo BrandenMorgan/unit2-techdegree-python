@@ -26,28 +26,92 @@ def balance_experience(start_index, end_index):
     return team
 
 
-panthers = balance_experience(0, 3)
-bandits = balance_experience(3, 6)
-warriors = balance_experience(6, 9)
+panthers_list = balance_experience(0, 3)
+bandits_list = balance_experience(3, 6)
+warriors_list = balance_experience(6, 9)
 
-def get_guardians(team):
-    for member in team:
-        for player in PLAYERS:
-            if member in team and player['name'] == member:
-                print(player['guardians'])
-get_guardians(panthers)
-
-team_dict = {"Panthers": panthers, "Bandits": bandits, "Warriors": warriors}
+teams = [{"Panthers": panthers_list}, {"Bandits": bandits_list}, {"Warriors": warriors_list}]
+panthers = teams[0]
+bandits = teams[1]
+warriors = teams[2]
 
 
-def make_new_list(value, list_key):
-    list = [dictionary[list_key] for dictionary in PLAYERS if dictionary['team'] == value]
+def get_players(name_of_team):
+    list = []
+    for team in teams:
+        for team_name, team_value in team.items():
+            for player in PLAYERS:
+                for value in team_value:
+                    if value in player['name'] and team_name == name_of_team:
+                        list.append(player['name'])
+
     return list
 
-def get_player_list(team):
-    team = (', ').join(team_dict[team])
-    return team
+print('Panther players:',len(get_players('Panthers')), get_players('Panthers'))
 
-panthers_players = get_player_list('Panthers')
-bandits_players = get_player_list('Bandits')
-warriors_players = get_player_list('Warriors')
+def get_guardians(name_of_team):
+    list = []
+    new_list = []
+    for team in teams:
+        for team_name, team_value in team.items():
+            for player in PLAYERS:
+                for value in team_value:
+                    if value in player['name'] and team_name == name_of_team:
+                        list.append(player['guardians'])
+    for guardian in list:
+        string = (', ').join(guardian)
+        new_list.append(string)
+
+    return new_list
+
+
+panthers_guardians = get_guardians('Panthers')
+print('Guardians:', panthers_guardians)
+
+
+def get_heights(name_of_team):
+    list = []
+    for team in teams:
+        for team_name, team_value in team.items():
+            for player in PLAYERS:
+                for value in team_value:
+                    if value in player['name'] and team_name == name_of_team:
+                        list.append(player['height'])
+    average = sum(list) // len(list)
+    return average
+
+
+heights = get_heights('Panthers')
+print('Average height:', heights)
+
+
+def experienced(name_of_team):
+    list = []
+    for team in teams:
+        for team_name, team_value in team.items():
+            for player in PLAYERS:
+                for value in team_value:
+                    if value in player['name'] and team_name == name_of_team and player['experience'] == True:
+                        list.append(player['name'])
+    return list
+
+print('Experienced players:',len(experienced('Panthers')), experienced('Panthers'))
+
+def inexperienced(name_of_team):
+    list = []
+    for team in teams:
+        for team_name, team_value in team.items():
+            for player in PLAYERS:
+                for value in team_value:
+                    if value in player['name'] and team_name == name_of_team and player['experience'] == False:
+                        list.append(player['name'])
+    return list
+
+print('Inexperienced players:', len(inexperienced('Panthers')), inexperienced('Panthers'))
+
+
+
+def display_stats(team_list):
+     display_message = (', ').join(team_list)
+     return display_message
+print('Panther players:', display_stats(get_players('Panthers')))
