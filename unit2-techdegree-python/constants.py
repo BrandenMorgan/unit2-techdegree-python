@@ -3,7 +3,7 @@ TEAMS = [
     'Bandits',
     'Warriors',
 ]
-# add team: team_name to each dictionary
+
 PLAYERS = [{
         'name': 'Karl Saygan',
         'guardians': 'Heather Bledsoe',

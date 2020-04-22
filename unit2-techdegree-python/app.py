@@ -1,79 +1,78 @@
-from new_data import (
-    all_players, get_player_experience, balance_experience, all_data, stats_message,
-    goodbye_message, total_players_message, guardian_message, height_message, experience_message,
-    more_stats, main_menu, view_stats, make_new_list, get_average_height, get_player_experience, get_user_team,
-    get_users_choice
-)
+
+import new_data
 import sys
 
+
 def team_stats(team):
-    stats_message(team)
-    player_list = make_new_list(team, 'name')
-    total_players_message(player_list[0], player_list[1])
-    view_more_stats = more_stats()
+    player_list = new_data.make_new_list(team, 'name')
+    guardians = new_data.make_new_list(team, 'guardians')
+    guardians = "- " + (', ').join(guardians)
+    height_list = new_data.make_new_list(team, 'height')
+    average_height = new_data.get_average_height(height_list)
+    experienced_players = new_data.get_player_experience(team, 'YES')
+    inexperienced = new_data.get_player_experience(team, 'NO')
+    
+    new_data.stats_message(team)
+    new_data.total_players_message(len(player_list),  "- " + (', ').join(player_list))
+    view_more_stats = new_data.more_stats()
+
+
+    def view_all_stats_message(team):
+        new_data.total_players_message(len(player_list),  "- " + (', ').join(player_list))
+        new_data.guardian_message(guardians.replace(' and', ','))
+        new_data.height_message( "- " + (', ').join(height_list), average_height)
+        new_data.experience_message(len(experienced_players), "- " + (', ').join(experienced_players),
+                            len(inexperienced),  "- " + (', ').join(experienced_players))
+        view_more_stats = new_data.more_stats()
+        return view_more_stats
+
+
     if view_more_stats.upper() in ['Y', 'YES']:
-        stats = view_stats()
+        stats = new_data.view_stats()
         if stats == 1:
-            guardians = make_new_list(team, 'guardians')
-            guardian_message(guardians[1].replace(' and', ','))
-            view_more_stats = more_stats(view_more_stats)
+            new_data.guardian_message(guardians.replace(' and', ','))
+            view_more_stats = new_data.more_stats(view_more_stats)
             if view_more_stats.upper() in ['N', 'NO']:
                 return view_more_stats
         elif stats == 2:
-            height_list = make_new_list(team, 'height')
-            average_height = get_average_height(height_list[2])
-            height_message(height_list[1], average_height)
-            view_more_stats = more_stats(view_more_stats)
+            new_data.height_message("- " + (', ').join(height_list), average_height)
+            view_more_stats = new_data.more_stats(view_more_stats)
             if view_more_stats.upper() == 'N':
                 return view_more_stats
         elif stats == 3:
-            experienced_players = get_player_experience(team, 'YES')
-            inexperienced = get_player_experience(team, 'NO')
-            experience_message(experienced_players[0], experienced_players[1],
-                                inexperienced[0], inexperienced[1])
-            view_more_stats = more_stats(view_more_stats)
+            new_data.experience_message(len(experienced_players), "- " + (', ').join(experienced_players),
+                                len(inexperienced),  "- " + (', ').join(experienced_players))
+            view_more_stats = new_data.more_stats(view_more_stats)
             if view_more_stats.upper() == 'N':
                 return view_more_stats
         elif stats == 4:
-            total_players_message(player_list[0], player_list[1])
-            guardians = make_new_list(team, 'guardians')
-            guardian_message(guardians[1].replace(' and', ','))
-            height_list = make_new_list(team, 'height')
-            average_height = get_average_height(height_list[2])
-            height_message(height_list[1], average_height)
-            experienced_players = get_player_experience(team, 'YES')
-            inexperienced = get_player_experience(team, 'NO')
-            experience_message(experienced_players[0], experienced_players[1],
-                                inexperienced[0], inexperienced[1])
-            view_more_stats = more_stats(view_more_stats)
-            if view_more_stats.upper() in ['N', 'NO']:
-                return view_more_stats
+            view_more_stats = view_all_stats_message(team)
     if view_more_stats.upper() in ['N', 'NO']:
-        goodbye_message()
+        new_data.goodbye_message()
         sys.exit()
     return view_more_stats
 
 
 def start_program():
     while True:
-        main_menu()
-        team = get_user_team()
+        new_data.main_menu()
+        team = new_data.get_user_team()
         if team == 1:
             view_more_stats = team_stats('Panthers')
             if view_more_stats.upper() in ['N', 'NO']:
-                goodbye_message()
+                new_data.goodbye_message()
                 break
         elif team == 2:
             view_more_stats = team_stats('Bandits')
             if view_more_stats.upper() in ['N', 'NO']:
-                goodbye_message()
+                new_data.goodbye_message()
                 break
         elif team == 3:
             view_more_stats = team_stats('Warriors')
             if view_more_stats.upper() in ['N', 'NO']:
-                goodbye_message()
+                new_data.goodbye_message()
                 break
 
-                
+
 if __name__ == '__main__':
     start_program()

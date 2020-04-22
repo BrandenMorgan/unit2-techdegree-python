@@ -106,8 +106,7 @@ def view_stats():
 
 def make_new_list(value, list_key):
     list = [dictionary[list_key] for dictionary in all_data if dictionary['team'] == value]
-    formatted_list = "- " + (', ').join(list)
-    return len(list), formatted_list, list
+    return list
 
 
 def get_average_height(list):
@@ -118,8 +117,7 @@ def get_average_height(list):
 
 def get_player_experience(value, answer):
     list = [dictionary['name'] for dictionary in all_data if dictionary['team'] == value and dictionary['experience'] == answer]
-    formatted_list = "- " + (', ').join(list)
-    return len(list), formatted_list
+    return list
 
 
 def get_user_team():
