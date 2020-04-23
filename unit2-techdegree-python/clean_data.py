@@ -1,7 +1,8 @@
+# New Version
 from constants import TEAMS, PLAYERS
+import sys
+import time
 
-
-all_players = [player['name'] for player in PLAYERS]
 
 for player in PLAYERS:
     player['guardians'] = [player['guardians']]
@@ -13,105 +14,146 @@ for player in PLAYERS:
 
 
 def get_player_experience(value):
-    list = [dict['name'] for dict in PLAYERS if dict['experience'] == value]
+    list = [dict for dict in PLAYERS if dict['experience'] == value]
     return list
 
 
-experienced_players = get_player_experience(True)
-inexperienced_players = get_player_experience(False)
+def goodbye_message():
+    print("\n*****Thank you for using BASKETBALL STATS TOOL*****")
+    time.sleep(1)
+    print('\n...Goodbye\n')
+    time.sleep(1)
 
 
-def balance_experience(start_index, end_index):
-    team = experienced_players[start_index:end_index] + inexperienced_players[start_index:end_index]
-    return team
-
-
-panthers_list = balance_experience(0, 3)
-bandits_list = balance_experience(3, 6)
-warriors_list = balance_experience(6, 9)
-
-teams = [{"Panthers": panthers_list}, {"Bandits": bandits_list}, {"Warriors": warriors_list}]
-panthers = teams[0]
-bandits = teams[1]
-warriors = teams[2]
-
-
-def get_players(name_of_team):
-    list = []
-    for team in teams:
-        for team_name, team_value in team.items():
-            for player in PLAYERS:
-                for value in team_value:
-                    if value in player['name'] and team_name == name_of_team:
-                        list.append(player['name'])
-
-    return list
-
-print('Panther players:',len(get_players('Panthers')), get_players('Panthers'))
-
-def get_guardians(name_of_team):
-    list = []
+def make_list(list, key):
     new_list = []
-    for team in teams:
-        for team_name, team_value in team.items():
-            for player in PLAYERS:
-                for value in team_value:
-                    if value in player['name'] and team_name == name_of_team:
-                        list.append(player['guardians'])
-    for guardian in list:
-        string = (', ').join(guardian)
-        new_list.append(string)
-
+    for player in list:
+        new_list.append(player[key])
     return new_list
-
-
-panthers_guardians = get_guardians('Panthers')
-print('Guardians:', panthers_guardians)
-
-
-def get_heights(name_of_team):
-    list = []
-    for team in teams:
-        for team_name, team_value in team.items():
-            for player in PLAYERS:
-                for value in team_value:
-                    if value in player['name'] and team_name == name_of_team:
-                        list.append(player['height'])
-    average = sum(list) // len(list)
-    return average
-
-
-heights = get_heights('Panthers')
-print('Average height:', heights)
-
-
-def experienced(name_of_team):
-    list = []
-    for team in teams:
-        for team_name, team_value in team.items():
-            for player in PLAYERS:
-                for value in team_value:
-                    if value in player['name'] and team_name == name_of_team and player['experience'] == True:
-                        list.append(player['name'])
-    return list
-
-print('Experienced players:',len(experienced('Panthers')), experienced('Panthers'))
-
-def inexperienced(name_of_team):
-    list = []
-    for team in teams:
-        for team_name, team_value in team.items():
-            for player in PLAYERS:
-                for value in team_value:
-                    if value in player['name'] and team_name == name_of_team and player['experience'] == False:
-                        list.append(player['name'])
-    return list
-
-print('Inexperienced players:', len(inexperienced('Panthers')), inexperienced('Panthers'))
-
 
 
 def display_stats(team_list):
      display_message = (', ').join(team_list)
      return display_message
-print('Panther players:', display_stats(get_players('Panthers')))
+
+
+def make_guardians_list(list, key):
+    new_list = []
+    for player in list:
+        new_list.append(player[key])
+    guardian_list = []
+    for guardian in new_list:
+        string = (', ').join(guardian)
+        guardian_list.append(string)
+    message = display_stats(guardian_list)
+    return message
+
+
+def average_height(team):
+    heights = make_list(team, 'height')
+    average_height = sum(heights) // len(heights)
+    return average_height
+
+
+def get_experience(list, bool):
+    new_list = []
+    for player in list:
+        if player['experience'] == bool:
+            new_list.append(player['name'])
+    return new_list
+
+
+def stats_message(team):
+    print('\n' + "-*" * 20)
+    print("          Team: {} Stats".format(team))
+    print("-*" * 20, '\n')
+
+
+def total_players_message(number, names):
+    print('\nTotal number of players: {} \n {}'.format(number, names))
+
+
+def guardian_message(names):
+    print('\nGuardians: \n - {}'.format(names))
+
+
+def height_message(average_height):
+    print("\nThe team's average height is {} inches".format(average_height))
+
+
+def experience_message(num_of_experienced_players, experiened_players, num_of_inexperienced_players, inexperienced_players):
+    print('\nExperienced players: {}\n {}\n'.format(num_of_experienced_players, experiened_players),
+    '\nInexperienced players: {}\n {}\n'.format(num_of_inexperienced_players, inexperienced_players))
+
+
+def keep_viewing(*args):
+    while True:
+        try:
+            args = input('\nWould you like to view more stats? [y]es/[n]o: ')
+            if args.upper() not in ['Y', 'YES'] and args.upper() not in ['N', 'NO']:
+                raise ValueError
+            if args.upper() in ['Y', 'YES']:
+                return args
+            elif args.upper() in ['N', 'NO']:
+                return args
+        except ValueError:
+            print('Oops... Please enter y or n.')
+
+
+def view_stats():
+    while True:
+        try:
+            stats = input("""\nWhich would you like to view?
+
+        1) Guardians
+        2) Average height
+        3) Experience
+        4) All stats
+        > """)
+            stats = int(stats)
+            if stats > 4 or stats < 1:
+                raise ValueError
+            return stats
+        except ValueError:
+            print("Please choose an available option")
+
+
+def main_menu():
+    print("  \nBASKETBALL STATS TOOL\n")
+    print("----MENU----\n")
+    choice = get_users_choice()
+    if choice == 1:
+        print("\n")
+        for number, team in enumerate(TEAMS, 1):
+            print(number, ")", team)
+    elif choice == 2:
+        sys.exit(goodbye_message())
+
+
+def get_users_choice():
+    while True:
+        try:
+            choice = int(input("""Here are your choices:
+
+        1) Display Team Stats
+        2) Quit
+
+Enter an option > """))
+            choice = int(choice)
+            if choice <= 0 or choice > 2:
+                raise ValueError
+            return choice
+        except ValueError:
+            print("Please enter a valid choice.\n")
+
+
+def get_user_team():
+    while True:
+        try:
+            team = int(input("\nSelect one of the above teams > "))
+            team = int(team)
+            if team > 3 or team < 1:
+                raise ValueError
+            return team
+        except ValueError:
+            print("Please enter a valid choice.\n")
